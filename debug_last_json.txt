@@ -1,0 +1,82 @@
+[
+    {
+        "Day/Time": "Day 1 - 09:00 AM",
+        "Activity": "Arrive in Kannur and check‑in at hotel",
+        "Notes": "Drop luggage, freshen up; choose a centrally located hotel for easy access to attractions"
+    },
+    {
+        "Day/Time": "Day 1 - 10:30 AM",
+        "Activity": "Breakfast",
+        "Notes": "Try a traditional Kerala breakfast (appam, puttu, kadala curry) at the hotel or nearby eatery"
+    },
+    {
+        "Day/Time": "Day 1 - 11:30 AM",
+        "Activity": "Visit St. Angelo Fort",
+        "Notes": "Historic Portuguese fort with sea‑view; entry free; wear comfortable shoes"
+    },
+    {
+        "Day/Time": "Day 1 - 01:00 PM",
+        "Activity": "Lunch",
+        "Notes": "Seafood thali at a local restaurant near the fort"
+    },
+    {
+        "Day/Time": "Day 1 - 02:30 PM",
+        "Activity": "Drive to Paithalmala",
+        "Notes": "Approximately 2‑hour drive via NH66; enjoy the scenic countryside"
+    },
+    {
+        "Day/Time": "Day 1 - 04:30 PM",
+        "Activity": "Start trek to Paithalmala summit",
+        "Notes": "Moderate trek (≈2 km); carry water, hat and sunscreen; entry fee about ₹10 per person"
+    },
+    {
+        "Day/Time": "Day 1 - 06:30 PM",
+        "Activity": "Sunset at Paithalmala peak",
+        "Notes": "Panoramic views of the Western Ghats and Arabian Sea; perfect photo spot"
+    },
+    {
+        "Day/Time": "Day 1 - 07:30 PM",
+        "Activity": "Return to Kannur",
+        "Notes": "Drive back; optional stop for dinner en route"
+    },
+    {
+        "Day/Time": "Day 1 - 08:30 PM",
+        "Activity": "Dinner",
+        "Notes": "Kerala cuisine (karimeen fry, avial) at a recommended local restaurant"
+    },
+    {
+        "Day/Time": "Day 2 - 08:00 AM",
+        "Activity": "Breakfast",
+        "Notes": "Hotel buffet or nearby café"
+    },
+    {
+        "Day/Time": "Day 2 - 09:00 AM",
+        "Activity": "Muzhappilangad Drive‑in Beach",
+        "Notes": "Unique 5 km drive‑in beach; parking fee ₹20; enjoy a short walk and beach photos"
+    },
+    {
+        "Day/Time": "Day 2 - 11:00 AM",
+        "Activity": "Visit Kannur Fort and nearby museum",
+        "Notes": "Explore the colonial fort and learn about local history; entry ₹5"
+    },
+    {
+        "Day/Time": "Day 2 - 01:00 PM",
+        "Activity": "Lunch",
+        "Notes": "Traditional Kerala meal at a popular eatery in Kannur town"
+    },
+    {
+        "Day/Time": "Day 2 - 02:30 PM",
+        "Activity": "Explore Dharmadam Island (or attend a Theyyam performance if scheduled)",
+        "Notes": "Short boat ride to the island; if Theyyam, check local timings and book in advance"
+    },
+    {
+        "Day/Time": "Day 2 - 04:30 PM",
+        "Activity": "Shopping at Kannur market",
+        "Notes": "Buy spices, handloom fabrics, and local handicrafts; bargain politely"
+    },
+    {
+        "Day/Time": "Day 2 - 06:00 PM",
+        "Activity": "Depart from Kannur",
+        "Notes": "Return to your onward destination; ensure you have all belongings"
+    }
+]

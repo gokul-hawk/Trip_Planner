@@ -1,0 +1,7 @@
+streamlit
+pandas
+groq
+duckduckgo-search
+langchain
+langchain-groq
+langchain-community

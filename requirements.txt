@@ -1,0 +1,7 @@
+python-docx
+rich
+groq
+duckduckgo-search>=6.0.0
+langgraph
+langchain-groq
+langchain-community
