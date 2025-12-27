@@ -65,7 +65,7 @@ def suggest_places_llm(context_text: str, columns: List[str] = None) -> str:
 
     return llm.generate(rag_prompt, system_msg)
 
-def refine_data_llm(row_data: dict, instruction: str, columns: list) -> str:
+def refine_data_llm(row_data: dict, instruction: str, columns: list, plan_context: str = "") -> str:
     """
     Surgically updates a single row of data based on user instruction.
     """
@@ -90,10 +90,14 @@ def refine_data_llm(row_data: dict, instruction: str, columns: list) -> str:
     2. Input is one object, Output must be a LIST containing that SINGLE updated object.
     3. Return strictly VALID JSON. Keys/Strings must be double-quoted.
     4. Maintain existing values for columns that are not changing.
+    5. Use the provided 'Context Plan' to understand dependencies (e.g. time continuity), but ONLY return the modified row.
     """
     
     rag_prompt = f"""
-    Original Row: {row_data}
+    Context Plan (Full Itinerary):
+    {plan_context}
+    
+    Original Row to Edit: {row_data}
     User Instruction: "{instruction}"
     Search Context: {search_results}
     

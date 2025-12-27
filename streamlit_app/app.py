@@ -125,7 +125,9 @@ def handle_grid_changes(edited_df):
                     try:
                         # Call Refine Agent
                         from agent.recommender import refine_data_llm
-                        response = refine_data_llm(row_dict, instruction, columns)
+                        # Pass full context for awareness
+                        full_context = edited_df.to_string()
+                        response = refine_data_llm(row_dict, instruction, columns, plan_context=full_context)
                         
                         # Parse List Response
                         clean_text = response.strip()
