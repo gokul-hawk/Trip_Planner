@@ -200,7 +200,7 @@ with col_main:
         edited_df = st.data_editor(
             st.session_state.plan_data,
             num_rows="dynamic",
-            use_container_width=True,
+            width="stretch",
             key="grid_editor",
             height=600
         )
