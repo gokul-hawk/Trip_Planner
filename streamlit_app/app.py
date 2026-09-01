@@ -4,6 +4,7 @@ import json
 import threading
 import os
 import sys
+import re
 
 # Ensure agent can be imported
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
@@ -102,8 +103,6 @@ with st.sidebar:
 # --- LOGIC HANDLERS ---
 def handle_grid_changes(edited_df):
     """ Detects Smart Triggers (>>) in Grid """
-    # Compare with previous state is hard, so we just scan for '>>'
-    
     triggers_found = False
     
     for idx, row in edited_df.iterrows():
@@ -114,22 +113,17 @@ def handle_grid_changes(edited_df):
                 instruction = val.replace(">>", "").strip()
                 
                 # Clean the triggers visual immediately
-                edited_df.at[idx, col] = instruction # Placeholder or clean?
+                edited_df.at[idx, col] = instruction
                 
                 with st.spinner(f"✨ Refining Row {idx+1}..."):
-                    # Prepare Row Context
                     row_dict = row.to_dict()
-                    row_dict[col] = instruction # Update with command
+                    row_dict[col] = instruction
                     columns = list(edited_df.columns)
                     
                     try:
-                        # Call Refine Agent
-                        from agent.recommender import refine_data_llm
-                        # Pass full context for awareness
                         full_context = edited_df.to_string()
                         response = refine_data_llm(row_dict, instruction, columns, plan_context=full_context)
                         
-                        # Parse List Response
                         clean_text = response.strip()
                         if clean_text.startswith("```json"): clean_text = clean_text[7:]
                         if clean_text.endswith("```"): clean_text = clean_text[:-3]
@@ -137,7 +131,6 @@ def handle_grid_changes(edited_df):
                         
                         if new_row_list and isinstance(new_row_list, list):
                             new_row_obj = new_row_list[0]
-                            # Update DataFrame
                             for k, v in new_row_obj.items():
                                 if k in edited_df.columns:
                                     edited_df.at[idx, k] = v
@@ -154,20 +147,24 @@ def handle_fill_plan():
         cols = list(st.session_state.plan_data.columns)
         resp = generate_quick_suggestion(context, columns=cols)
         try:
-             clean_text = resp.strip().replace("```json", "").replace("```", "")
-             data = json.loads(clean_text)
-             st.session_state.plan_data = pd.DataFrame(data)
-        except: st.error("AI Generation Failed")
+            clean_text = resp.strip().replace("```json", "").replace("```", "")
+            data = json.loads(clean_text)
+            st.session_state.plan_data = pd.DataFrame(data)
+            st.rerun()
+        except Exception as e:
+            st.error(f"AI Generation Failed: {e}")
 
 def handle_modify_plan(instr):
     with st.spinner("✨ Restructuring..."):
         data = st.session_state.plan_data.to_dict(orient="records")
         resp = restructure_plan_llm(data, instr, list(st.session_state.plan_data.columns))
         try:
-             clean_text = resp.strip().replace("```json", "").replace("```", "")
-             st.session_state.plan_data = pd.DataFrame(json.loads(clean_text))
-             st.success("Plan Modified!")
-        except: st.error("Modification Failed")
+            clean_text = resp.strip().replace("```json", "").replace("```", "")
+            st.session_state.plan_data = pd.DataFrame(json.loads(clean_text))
+            st.success("Plan Modified!")
+            st.rerun()
+        except Exception as e:
+            st.error(f"Modification Failed: {e}")
 
 # --- UI LAYOUT ---
 col1, col2 = st.columns([2.5, 1], gap="medium")
@@ -183,19 +180,17 @@ with col1:
         if c3.button("🚀 Modify"): 
             if mod_txt: handle_modify_plan(mod_txt)
             
-        # Grid with Callback
+        # Grid with Callback (Fixed use_container_width -> width)
         edited_df = st.data_editor(
             st.session_state.plan_data,
             num_rows="dynamic",
-            use_container_width=True,
+            width="stretch",
             key="grid",
             height=600
         )
         
         # Check for Triggers
-        # We check if the edited_df matches session state. If different, we scan.
         if not edited_df.equals(st.session_state.plan_data):
-            # Scan for >>
             final_df = handle_grid_changes(edited_df)
             st.session_state.plan_data = final_df
             st.rerun()
@@ -206,52 +201,35 @@ with col1:
         
         # Smart Text Triggers
         if txt != st.session_state.notepad_content:
-            # Check for >> 
             lines = txt.split('\n')
-            last_line = lines[-1].strip() if lines else ""
             
-            if ">>" in txt: # Naive check, improved below
-                # Find line with >>
+            if ">>" in txt:
                 for i, line in enumerate(lines):
                     if line.strip().endswith(">>"):
                         prompt = line.replace(">>", "").strip()
-                        # call AI
                         with st.spinner("Writing..."):
                             resp = generate_quick_suggestion(st.session_state.notepad_content + "\n" + prompt)
-                            # Replace line with Prompt + Response
                             lines[i] = prompt + "\n" + resp
                             st.session_state.notepad_content = "\n".join(lines)
                             st.rerun()
             
-            # Check for [...]
-            elif "]" in txt:
-                # Find line ending with [instruction]
-                import re
-                for i, line in enumerate(lines):
-                    match = re.search(r'(.*)\[(.*?)\]$', line)
-                    if match:
-                        content = match.group(1).strip()
-                        instr = match.group(2).strip()
-                        # We only trigger if user hits enter (new line added)? 
-                        # Streamlit is tricky with keystrokes. We'll use a button for reliability or assume specific syntax.
-                        # For now, let's leave [...] as a "Click to Apply" or rely on a helper button.
-                        pass
-
             st.session_state.notepad_content = txt
 
 with col2:
     st.subheader("💬 Assistant")
     
-    # Custom Chat Container using st.container
     with st.container(height=700, border=True):
         for msg in st.session_state.chat_history:
-             with st.chat_message(msg["role"]): st.markdown(msg["content"])
-             
+            with st.chat_message(msg["role"]): 
+                st.markdown(msg["content"])
+            
         if prompt := st.chat_input("Ask Copilot..."):
             st.session_state.chat_history.append({"role": "user", "content": prompt})
-            with st.chat_message("user"): st.markdown(prompt)
+            with st.chat_message("user"): 
+                st.markdown(prompt)
             with st.chat_message("assistant"):
                 with st.spinner("Thinking..."):
-                     resp = run_agent(prompt)
-                     st.markdown(resp)
+                    resp = run_agent(prompt)
+                    st.markdown(resp)
             st.session_state.chat_history.append({"role": "assistant", "content": resp})
+            st.rerun()
