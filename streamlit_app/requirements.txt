@@ -1,7 +1,7 @@
 streamlit
 pandas
 groq
-duckduckgo-search
+ddgs
 langchain
 langchain-groq
 langchain-community
